@@ -5,66 +5,85 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-from account import *
+from account import * 
+
+def check_stock_and_add_to_cart(driver, products):
+    for product_name, stock_state in products.items():
+        try:
+            # Find products
+            product_elements = driver.find_elements(By.CLASS_NAME, "product-item")
+            for product in product_elements:
+                name = product.find_element(By.CLASS_NAME, "product-item-name").text
+                if name == product_name:
+                    add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
+                    # Check stock status
+                    if add_to_cart_button.is_enabled() and stock_state == 0:  # If it came in stock
+                        add_to_cart_button.click()
+                        print(f"{product_name} added to cart.")
+                        products[product_name] = 1  # Set stock to True
+                    elif not add_to_cart_button.is_enabled():
+                        print(f"{product_name}: Out of stock.")
+                        products[product_name] = 0  # Set stock to False
+                    break
+        except Exception as e:
+            print(f"{product_name}: Error - {e}")
 
 def login_and_check_wishlist():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     driver.get("https://www.rossmann.com.tr/customer/account/login/")
-
+    
+    # Refresh the site so it doesn't error.
     driver.refresh()
 
-    # Giriş formunun görünmesini bekliyoruz (max 10 saniye)
+    # Login (Max timeout after 10 sec)
     wait = WebDriverWait(driver, 10)
 
-    # Giriş formunu dolduruyoruz
+    # Login
     username = wait.until(EC.presence_of_element_located((By.NAME, "login[username]")))
     password = wait.until(EC.presence_of_element_located((By.NAME, "login[password]")))
     
     username.send_keys(mail)
     password.send_keys(acc_password)
 
-    # Giriş yap butonuna tıklıyoruz
+    # Click to login
     login_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "action.login.primary")))
     login_button.click()
 
     time.sleep(5)
 
-    # Giriş yaptıktan sonra istek listesi sayfasına gidiyoruz
+    # Go to wishlist
     WISHLIST_URL = 'https://www.rossmann.com.tr/wishlist?limit=1000'
     driver.get(WISHLIST_URL)
     
-    # Sayfanın yüklenmesi için birkaç saniye bekliyoruz
+    # Wait 5 sec for it to load the page
     time.sleep(5)
     
-    # page_source = driver.page_source
-    # soup = BeautifulSoup(page_source, 'html.parser')
-
-    # product_items = soup.find_all("li", {"class": "product-item"})
-
-    # Tüm ürünleri çekiyoruz
+    # Pull all items
     product_items = driver.find_elements(By.CLASS_NAME, "product-item")
     
     products = {}
-    stock_state = 1
     for product in product_items:
         try:
-            # Her ürün için "Sepete Ekle" butonunu bulmaya çalışıyoruz
+            product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
             add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
             if add_to_cart_button.is_enabled():
-                product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
-                print(f"{product_name}: Stokta mevcut")
-                stock_state = 1
+                print(f"{product_name}: In stock")
+                products[product_name] = 1
             else:
-                product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
-                print(f"{product_name}: Stokta yok")
-                stock_state = 0
-            products[product_name] = stock_state
-        except:
-            product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
-            print(f"{product_name}: Sepete eklenemiyor, stok durumu bilinmiyor")
-    
-    # Tarayıcıyı en son kapatıyoruz
+                print(f"{product_name}: Out of stock.")
+                products[product_name] = 0
+        except Exception as e:
+            print(f"{product_name}: Error - {e}")
+    # Stock control loop
+    try:
+        while True:
+            print("Checking stock status...")
+            check_stock_and_add_to_cart(driver, products)
+            time.sleep(60)  # Wait 1 min
+    except KeyboardInterrupt:
+        print("Stopped control loop.")
+
+    # Close browser.
     driver.quit()
-    
 
 login_and_check_wishlist()
