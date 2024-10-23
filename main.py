@@ -44,6 +44,8 @@ def login_and_check_wishlist():
     # Tüm ürünleri çekiyoruz
     product_items = driver.find_elements(By.CLASS_NAME, "product-item")
     
+    products = {}
+    stock_state = 1
     for product in product_items:
         try:
             # Her ürün için "Sepete Ekle" butonunu bulmaya çalışıyoruz
@@ -51,14 +53,18 @@ def login_and_check_wishlist():
             if add_to_cart_button.is_enabled():
                 product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
                 print(f"{product_name}: Stokta mevcut")
+                stock_state = 1
             else:
                 product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
                 print(f"{product_name}: Stokta yok")
+                stock_state = 0
+            products[product_name] = stock_state
         except:
             product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
             print(f"{product_name}: Sepete eklenemiyor, stok durumu bilinmiyor")
     
     # Tarayıcıyı en son kapatıyoruz
     driver.quit()
+    
 
 login_and_check_wishlist()
