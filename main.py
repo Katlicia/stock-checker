@@ -26,8 +26,8 @@ def check_stock_and_add_to_cart(driver, products):
                         print(f"{product_name}: Out of stock.")
                         products[product_name] = 0  # Set stock to False
                     break
-        except Exception as e:
-            print(f"{product_name}: Error - {e}")
+        except:
+            pass
 
 def login_and_check_wishlist():
     browser_options = Options()
@@ -66,15 +66,19 @@ def login_and_check_wishlist():
     
     products = {}
     for product in product_items:
+        # If add to cart exists the item is in stock.
         try:
             product_name = product.find_element(By.CLASS_NAME, "product-item-name").text
-            add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
-            if add_to_cart_button.is_enabled():
-                print(f"{product_name}: In stock")
-                products[product_name] = 1
-            else:
-                print(f"{product_name}: Out of stock.")
-                products[product_name] = 0
+            try:
+                add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
+                if add_to_cart_button.is_enabled():
+                    print(f"{product_name}: In stock")
+                    products[product_name] = 1
+            except:
+                unavailable_stock = product.find_element(By.CLASS_NAME, "unavailable.stock")
+                if unavailable_stock:
+                    print(f"{product_name}: Out of stock")
+                    products[product_name] = 0
         except Exception as e:
             print(f"{product_name}: Error - {e}")
     # Stock control loop
