@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 import time
 from account import * 
 
@@ -29,7 +30,9 @@ def check_stock_and_add_to_cart(driver, products):
             print(f"{product_name}: Error - {e}")
 
 def login_and_check_wishlist():
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    browser_options = Options()
+    browser_options.add_argument("--headless")
+    driver = webdriver.Chrome(options = browser_options,service=Service(ChromeDriverManager().install()))
     driver.get("https://www.rossmann.com.tr/customer/account/login/")
     
     # Refresh the site so it doesn't error.
@@ -79,7 +82,8 @@ def login_and_check_wishlist():
         while True:
             print("Checking stock status...")
             check_stock_and_add_to_cart(driver, products)
-            time.sleep(60)  # Wait 1 min
+            print(products)
+            time.sleep(10)  # Wait 10 sec
     except KeyboardInterrupt:
         print("Stopped control loop.")
 
