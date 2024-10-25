@@ -39,7 +39,6 @@ def rossmann_check_stock_and_add_to_cart(driver, products):
                 link = product.find_element(By.CLASS_NAME, "product-item-link").text
                 name = brand + " " +link
                 if product_name == name:
-                    # print(f"name = {name} : product_name = {product_name}")
                     add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
                     # Check stock status
                     if add_to_cart_button.is_enabled() and stock_state == 0:  # If it came in stock
@@ -51,6 +50,7 @@ def rossmann_check_stock_and_add_to_cart(driver, products):
             pass
     
     driver.refresh()
+    print("Refreshing Website")
 
 def rossmann_login_and_check_wishlist():
     browser_options = Options()
@@ -84,29 +84,7 @@ def rossmann_login_and_check_wishlist():
     # Wait 5 sec for it to load the page
     time.sleep(5)
     
-    # Pull all items
-    # product_items = driver.find_elements(By.CLASS_NAME, "product-item")
-    
     products = {}
-    # for product in product_items:
-    #     print("asdfgasdgasdfg")
-    #     # If add to cart exists the item is in stock.
-    #     try:
-    #         product_brand = product.find_element(By.CLASS_NAME, "product-item-name").text
-    #         product_link = product.find_element(By.CLASS_NAME, "product-item-link").text
-    #         product_name = product_brand + " " + product_link
-    #         # try:
-    #         #     add_to_cart_button = product.find_element(By.CSS_SELECTOR, ".action.tocart.primary")
-    #         #     if add_to_cart_button.is_enabled():
-    #         #         print(f"{product_name}: In stock")
-    #         #         products[product_name] = 1
-    #         # except:
-    #         #     unavailable_stock = product.find_element(By.CLASS_NAME, "unavailable.stock")
-    #         #     if unavailable_stock:
-    #         #         print(f"{product_name}: Out of stock")
-    #         #         products[product_name] = 0
-    #     except Exception as e:
-    #         pass
 
     # Stock control loop
     try:
