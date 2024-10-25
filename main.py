@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 from account import * 
 
-def rossmann_check_stock_and_add_to_cart(driver, products, a):
+def rossmann_check_stock_and_add_to_cart(driver, products):
     # Check Stock
     product_items = driver.find_elements(By.CLASS_NAME, "product-item")
     for product in product_items:
@@ -29,15 +29,11 @@ def rossmann_check_stock_and_add_to_cart(driver, products, a):
                     products[product_name] = 0
         except Exception:
             pass
-    if a == True:
-        products["Isana Kapsül Serum"] = 0
-        a = False
 
     # Add to card
     for product_name, stock_state in products.items():
         try:
             # Find products
-            
             for product in product_items:
                 brand = product.find_element(By.CLASS_NAME, "product-item-name").text
                 link = product.find_element(By.CLASS_NAME, "product-item-link").text
@@ -52,14 +48,14 @@ def rossmann_check_stock_and_add_to_cart(driver, products, a):
                         products[product_name] = 1
                     break
         except:
-            pass  
+            pass
+    
+    driver.refresh()
 
 def rossmann_login_and_check_wishlist():
-    a = True
     browser_options = Options()
     browser_options.add_argument("--headless")
-    # driver = webdriver.Chrome(options = browser_options, service=Service(ChromeDriverManager().install()))
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    driver = webdriver.Chrome(options = browser_options, service=Service(ChromeDriverManager().install()))
     driver.get("https://www.rossmann.com.tr/customer/account/login/")
     
     # Refresh the site so it doesn't error.
@@ -116,7 +112,7 @@ def rossmann_login_and_check_wishlist():
     try:
         while True:
             print("Checking stock status...")
-            rossmann_check_stock_and_add_to_cart(driver, products, a)
+            rossmann_check_stock_and_add_to_cart(driver, products)
             print(products)
             time.sleep(10)  # Wait 10 sec
     except KeyboardInterrupt:
