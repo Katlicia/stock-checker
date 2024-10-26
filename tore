@@ -1,0 +1,47 @@
+[33mcommit 4767ce763ab1568b5e338cb35503de378905beab[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Sat Oct 26 00:17:57 2024 +0300
+
+    rossmann auto stock done
+
+[33mcommit 084eca04a45807862c9daa5bc1e922f62df196a5[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Fri Oct 25 19:31:26 2024 +0300
+
+    gratis webscraping done
+
+[33mcommit e265c12695efddd57c0eb92634eb07220d455a9b[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Thu Oct 24 15:15:15 2024 +0300
+
+    fully functional stock state and add to cart
+
+[33mcommit 85c608be8282c900fb880617a00312d6c786443f[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Thu Oct 24 15:05:23 2024 +0300
+
+    print and headless browser
+
+[33mcommit fae38453ea6c9db9b7a933b69511a1bbfcb9e31c[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Wed Oct 23 23:37:29 2024 +0300
+
+    adds the item to card if stock is refreshed
+
+[33mcommit 73f98389ef28b45b8b6bb0ba113d8cfd4bd6333f[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Wed Oct 23 22:54:33 2024 +0300
+
+    product dictionary created
+
+[33mcommit 90874ee00a4fb4ee04c04f9da9f39a573ba0ecd8[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Wed Oct 23 21:04:32 2024 +0300
+
+    .gitignore updated
+
+[33mcommit d6c7788aa06b087bebe3067550d8e97278493712[m
+Author: Katlicia <mama-4153@hotmail.com>
+Date:   Wed Oct 23 20:52:29 2024 +0300
+
+    checks if favorite items is in stock
