@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import threading
 from account import * 
 
 def rossmann_check_stock_and_add_to_cart(driver, products):
@@ -56,7 +57,7 @@ def rossmann_check_stock_and_add_to_cart(driver, products):
 def rossmann_login_and_check_wishlist():
     browser_options = Options()
     browser_options.add_argument("--headless")
-    driver = webdriver.Chrome(options = browser_options, service=Service(ChromeDriverManager().install()))
+    driver = webdriver.Chrome(options= browser_options, service=Service(ChromeDriverManager().install()))
     driver.get("https://www.rossmann.com.tr/customer/account/login/")
     
     # Refresh the site so it doesn't error.
@@ -99,8 +100,6 @@ def rossmann_login_and_check_wishlist():
 
     # Close browser.
     driver.quit()
-
-rossmann_login_and_check_wishlist()
 
 def gratis_check_stock_and_add_to_cart(driver, products):
     # Check Stock
@@ -202,4 +201,14 @@ def gratis_login_and_check_wishlist():
     # Close browser.
     driver.quit()
 
-gratis_login_and_check_wishlist()
+def run_parallel_checks():
+    rossmann_thread = threading.Thread(target=rossmann_login_and_check_wishlist)
+    gratis_thread = threading.Thread(target=gratis_login_and_check_wishlist)
+
+    rossmann_thread.start()
+    gratis_thread.start()
+
+    rossmann_thread.join()
+    gratis_thread.join()
+
+run_parallel_checks()
