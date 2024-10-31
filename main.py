@@ -79,8 +79,11 @@ def rossmann_login_and_check_wishlist():
 
     time.sleep(5)
 
+    print("Logged into ROSSMANN")
+
     # Go to wishlist
     WISHLIST_URL = 'https://www.rossmann.com.tr/wishlist?limit=1000'
+    print("In ROSSMANN wishlist")
     driver.get(WISHLIST_URL)
     
     # Wait 5 sec for it to load the page
@@ -174,6 +177,8 @@ def gratis_login_and_check_wishlist():
 
     time.sleep(5)
 
+    print("Logged into GRATIS")
+
     popup_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "popup_close")))
     popup_button.click()
 
@@ -184,6 +189,8 @@ def gratis_login_and_check_wishlist():
     # Wait 5 sec for it to load the page
     time.sleep(5)
     
+    print("In GRATIS wishlist")
+
     products = {}
 
     # Stock control loop
