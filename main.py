@@ -155,7 +155,8 @@ def gratis_check_stock_and_add_to_cart(driver, products):
 def gratis_login_and_check_wishlist():
     browser_options = Options()
     browser_options.add_argument("--headless")
-    driver = webdriver.Chrome(options= browser_options, service=Service(ChromeDriverManager().install()))
+    #driver = webdriver.Chrome(options= browser_options, service=Service(ChromeDriverManager().install()))
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     driver.get("https://www.gratis.com/login")
     
     # Refresh the site so it doesn't error.
@@ -171,6 +172,8 @@ def gratis_login_and_check_wishlist():
     username.send_keys(mail)
     password.send_keys(acc_password)
 
+    time.sleep(3)
+
     # Click to login
     login_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "round-btns")))
     login_button.click()
@@ -178,9 +181,12 @@ def gratis_login_and_check_wishlist():
     time.sleep(5)
 
     print("Logged into GRATIS")
-
-    popup_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "popup_close")))
-    popup_button.click()
+    
+    try:
+        popup_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "popup_close")))
+        popup_button.click()
+    except:
+        pass
 
     # Go to wishlist
     WISHLIST_URL = 'https://www.gratis.com/my-account/wishlist'
